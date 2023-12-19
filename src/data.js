@@ -1,62 +1,112 @@
 let positions = [
-    {x: 45.171112, y: 5.695952},
-    {x: 45.183152, y: 5.699386},
-    {x: 45.174115, y: 5.711106},
-    {x: 45.176123, y: 5.722083},
-    {x: 45.184301, y: 5.719791},
-    {x: 45.184252, y: 5.730698},
-    {x: 45.170588, y: 5.716664},
-    {x: 45.193702, y: 5.691028},
-    {x: 45.165641, y: 5.739938},
-    {x: 45.178718, y: 5.744940},
-    {x: 45.176857, y: 5.762518},
-    {x: 45.188512, y: 5.767172},
-    {x: 45.174017, y: 5.706729},
-    {x: 45.174458, y: 5.687902},
-    {x: 45.185110, y: 5.733667},
-    {x: 45.185702, y: 5.734507},
-    {x: 45.184726, y: 5.734666},
-    {x: 45.184438, y: 5.733735},
-    {x: 45.184902, y: 5.735256},
-    {x: 45.174812, y: 5.698095},
-    {x: 45.169851, y: 5.695723},
-    {x: 45.180943, y: 5.698965},
-    {x: 45.176205, y: 5.692165},
-    {x: 45.171244, y: 5.689872}
+    {lat: 45.171112, lng: 5.695952},
+    {lat: 45.183152, lng: 5.699386},
+    {lat: 45.174115, lng: 5.711106},
+    {lat: 45.176123, lng: 5.722083},
+    {lat: 45.184301, lng: 5.719791},
+    {lat: 45.184252, lng: 5.730698},
+    {lat: 45.170588, lng: 5.716664},
+    {lat: 45.193702, lng: 5.691028},
+    {lat: 45.165641, lng: 5.739938},
+    {lat: 45.178718, lng: 5.744940},
+    {lat: 45.176857, lng: 5.762518},
+    {lat: 45.188512, lng: 5.767172},
+    {lat: 45.174017, lng: 5.706729},
+    {lat: 45.174458, lng: 5.687902},
+    {lat: 45.185110, lng: 5.733667},
+    {lat: 45.185702, lng: 5.734507},
+    {lat: 45.184726, lng: 5.734666},
+    {lat: 45.184438, lng: 5.733735},
+    {lat: 45.184902, lng: 5.735256},
+    {lat: 45.174812, lng: 5.698095},
+    {lat: 45.169851, lng: 5.695723},
+    {lat: 45.180943, lng: 5.698965},
+    {lat: 45.176205, lng: 5.692165},
+    {lat: 45.171244, lng: 5.689872}
 ]
 
-let isVisited = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+let visited = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 
 console.log("Voici les points GPS");
 console.log(positions);
 
 // Fonction pour calculer les distances entre deux points
 function distance(point1, point2) {
-    let fx = point1.x - point2.x;
+    let fx = point1.lat - point2.lat;
     // console.log("Mon point en x " + fx);
-    let fy = point1.y - point2.y;
+    let fy = point1.lng - point2.lng;
     // console.log("Mon point en y " + fy);
     return Math.sqrt(fx * fx + fy * fy);
 }
 
-console.log("--------------------------");
-console.log("Distance entre deux points");
-console.log("--------------------------");
-
-
-//Fonction pour trier les positions par distance par rapport à une position de référence
+//Fonction pour trier les positions par distance (matrice de distance)
 let matrix = [];
 for (let i = 0; i < positions.length; i++) {
+    matrix[i] = [];
     for (let j = 0; j < positions.length; j++) {
         // rentrer résultat fonction distance dans le tableau matrix
-        matrix.push(distance(positions[i], positions[j]));
+        matrix[i].push(distance(positions[i], positions[j]));
     }
 }
+
+
 console.log(matrix);
 console.log("Woohoooo MATRIX ON THE WAY");
+console.log("--------------------------");
+
+// Fonction du chemin le plus court non visité
+function shortestUnVisited(currentTown) {
+    visited[currentTown] = true;
+    let smallest = 100000;
+    let iSmallest = 0;
+
+    for (let i = 0; i < matrix.length; i++)
+        if (!visited[i]) {
+            if (matrix[currentTown][i] < smallest) {
+                smallest = matrix[currentTown][i];
+                iSmallest = i;
+            }
+        }
+    return iSmallest;
+}
+
+shortestUnVisited(0);
 
 
-let idx = 0;
-// matrix.forEach() {
-//
-// }
+// Index de la plus petite distance à index non visité
+for (let i = 0; i < matrix.length; i++) {
+    let indexTown = 0;
+    indexTown = shortestUnVisited(indexTown);
+    console.log("Ceci est l'index du chemin le plus court ", indexTown);
+}
+
+// ----------------------------------- AFFICHAGE ---------------------------------------//
+
+// Creating map options
+var mapOptions = {
+    center: positions[0],
+    zoom: 12
+}
+
+// Creating a map object
+var map = new L.map('map', mapOptions);
+
+// Creating a Layer object
+var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+// Adding layer to the map
+map.addLayer(layer);
+// Adding the markers
+for (i = 0; i < positions.length; i++) {
+    var marker = new L.Marker(positions[i]);
+    marker.addTo(map);
+}
+
+// Draw lines between point
+var firstpolyline = new L.Polyline(positions, {
+    color: 'red',
+    weight: 3,
+    opacity: 0.5,
+    smoothFactor: 1
+});
+firstpolyline.addTo(map);
