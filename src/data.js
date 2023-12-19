@@ -39,6 +39,8 @@ function distance(point1, point2) {
     return Math.sqrt(fx * fx + fy * fy);
 }
 
+console.log("----------------------------------------------------------------------------------");
+console.log("WOOHOOO MATRIX ON THE WAY");
 //Fonction pour trier les positions par distance (matrice de distance)
 let matrix = [];
 for (let i = 0; i < positions.length; i++) {
@@ -48,11 +50,8 @@ for (let i = 0; i < positions.length; i++) {
         matrix[i].push(distance(positions[i], positions[j]));
     }
 }
-
-
 console.log(matrix);
-console.log("Woohoooo MATRIX ON THE WAY");
-console.log("--------------------------");
+console.log("----------------------------------------------------------------------------------");
 
 // Fonction du chemin le plus court non visité
 function shortestUnVisited(currentTown) {
@@ -69,16 +68,17 @@ function shortestUnVisited(currentTown) {
         }
     return iSmallest;
 }
-
 shortestUnVisited(0);
 
-
 // Index de la plus petite distance à index non visité
+let path = [];
+let indexTown = 0;
 for (let i = 0; i < matrix.length; i++) {
-    let indexTown = 0;
     indexTown = shortestUnVisited(indexTown);
+    path.push(positions[indexTown]);
     console.log("Ceci est l'index du chemin le plus court ", indexTown);
 }
+
 
 // ----------------------------------- AFFICHAGE ---------------------------------------//
 
@@ -110,3 +110,12 @@ var firstpolyline = new L.Polyline(positions, {
     smoothFactor: 1
 });
 firstpolyline.addTo(map);
+
+// Draw lines between point for the Shortest path
+var secondpolyline = new L.Polyline(path, {
+    color: 'blue',
+    weight: 3,
+    opacity: 0.5,
+    smoothFactor: 1
+});
+secondpolyline.addTo(map);
