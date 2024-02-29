@@ -6,6 +6,14 @@
 3. Analyser la complexité d’un algorithme et en déduire une estimation du temps de résolution théorique
 4. Nommer précisément les outils algorithmiques utilisés dans le code.
 
+5. Implémenter une ou plusieurs heuristiques de résolution. 
+Choisir une des heuristiques ou métaheuristiques de résolution suivante et l’implémenter :
+- 🔥 Algorithme des plus proches voisins
+- 🔥🔥 Algorithme "2-opt"
+- 🔥🔥 Algorithme glouton
+- 🔥🔥🔥 Algorithme de la colonie de fourmis
+- 🔥🔥🔥🔥 Algorithme génétique
+
 ## Compétences
 + Implémenter les structures algorithmiques de base (boucles, conditions, fonctions, tableaux).
 + Déduire des structures algorithmiques à partir d’une problématique métier.
